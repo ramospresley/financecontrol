@@ -1,0 +1,7 @@
+echo "/vendor/
+/node_modules/
+/.env
+/.htaccess
+/storage/logs/
+/storage/framework/
+/composer.lock" > .gitignore
