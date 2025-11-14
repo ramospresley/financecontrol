@@ -1,0 +1,67 @@
+PASSO A PASSO PARA ACESSAR PROJETO FINANCECONTROL
+
+1) Instalar o xampp: https://www.apachefriends.org/pt_br/download.html 
+2) Instalar git: https://git-scm.com/downloads/win 
+3) Instalar composer: https://getcomposer.org/download/ 
+
+4) Abrir cmd
+5) Desligar o MySql server
+Parar o serviço Mysql que está em conflito
+Digite: sc stop mysql
+ou
+sc stop MySQL80
+
+6) Baixar pasta do projeto do drive para c:xampp/htdocs/
+7) Abrir pagina no navegador em:
+http://localhost/phpmyadmin/index.php
+
+8) Criar banco de dados com o seguinte código:
+-- Criação do banco
+CREATE DATABASE financecontrol CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE financecontrol;
+
+-- Tabela de usuários
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de transações
+CREATE TABLE transacoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    tipo ENUM('receita', 'despesa', 'investimento') NOT NULL,
+    categoria VARCHAR(50) NOT NULL,
+    descricao TEXT,
+    valor DECIMAL(10,2) NOT NULL,
+    data DATE NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- Tabela de trilha de aprendizado
+CREATE TABLE trilha_conhecimento (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    conteudo TEXT NOT NULL,
+    nivel ENUM('iniciante', 'intermediario', 'avancado') NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de progresso do usuário na trilha
+CREATE TABLE progresso_aprendizado (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    trilha_id INT NOT NULL,
+    status ENUM('nao_iniciado', 'em_progresso', 'concluido') DEFAULT 'nao_iniciado',
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (trilha_id) REFERENCES trilha_conhecimento(id)
+);
+
+9) Atualizar Banco de dados com os comandos SQL que estão respectivamente nos arquivos financecontrol.sql e UpdateSQL.txt
+10) Abrir pagina no navegador em:
+http://localhost/financecontrol/index.php
